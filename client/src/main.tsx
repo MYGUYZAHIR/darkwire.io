@@ -20,7 +20,7 @@ store.subscribe(() => persistState(store));
 const router = createBrowserRouter([
   {
     path: '/',
-    element: <Navigate to={`/${nanoid()}`} replace />,
+    element: <Navigate to="/main-room" replace />,
   },
   {
     path: '/:roomId',

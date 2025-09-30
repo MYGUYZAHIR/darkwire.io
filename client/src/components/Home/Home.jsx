@@ -16,6 +16,7 @@ import About from '@/components/About';
 import Settings from '@/components/Settings';
 import Welcome from '@/components/Welcome';
 import RoomLocked from '@/components/RoomLocked';
+import UsernameEntry from '@/components/UsernameEntry';
 
 import ActivityList from './ActivityList';
 
@@ -40,6 +41,7 @@ const Modal = ({
   notificationIsAllowed,
   setLanguage,
   language,
+  onUsernameSubmit,
 }) => {
   const getModal = () => {
     switch (modalComponent) {
@@ -83,6 +85,12 @@ const Modal = ({
         return {
           component: <RoomLocked modalContent={translations.lockedRoomHeader} />,
           title: translations.lockedRoomHeader,
+          preventClose: true,
+        };
+      case 'Username Entry':
+        return {
+          component: <UsernameEntry onSubmit={onUsernameSubmit} translations={translations} />,
+          title: 'Welcome to the Chat',
           preventClose: true,
         };
       default:
@@ -156,6 +164,7 @@ const Home = ({
   translations,
   setLanguage,
   language,
+  onUsernameSubmit,
 }) => {
   const socketPayloadRef = React.useRef({
     username: username,
@@ -287,13 +296,15 @@ const Home = ({
         notificationIsAllowed={notificationIsAllowed}
         setLanguage={setLanguage}
         language={language}
+        onUsernameSubmit={onUsernameSubmit}
       />
     </div>
   );
 };
 
-export const WithUser = ({ ...rest }) => {
+export const WithUser = ({ openModal, ...rest }) => {
   const [loaded, setLoaded] = React.useState(false);
+  const [pendingUsername, setPendingUsername] = React.useState(null);
   const loading = React.useRef(false);
 
   const user = useSelector(state => state.user);
@@ -302,9 +313,7 @@ export const WithUser = ({ ...rest }) => {
   React.useEffect(() => {
     let mounted = true;
 
-    const createUserLocal = async () => {
-      const localUsername = user.username || nanoid();
-
+    const createUserLocal = async (username) => {
       const encryptDecryptKeys = await crypto.createEncryptDecryptKeys();
       const exportedEncryptDecryptPrivateKey = await crypto.exportKey(encryptDecryptKeys.privateKey);
       const exportedEncryptDecryptPublicKey = await crypto.exportKey(encryptDecryptKeys.publicKey);
@@ -315,7 +324,7 @@ export const WithUser = ({ ...rest }) => {
       }
 
       const payload = {
-        username: localUsername,
+        username,
         publicKey: exportedEncryptDecryptPublicKey,
         privateKey: exportedEncryptDecryptPrivateKey,
       };
@@ -328,21 +337,32 @@ export const WithUser = ({ ...rest }) => {
     };
 
     if (!loaded && !loading.current) {
-      loading.current = true;
-      createUserLocal();
+      if (user.username) {
+        loading.current = true;
+        createUserLocal(user.username);
+      } else if (pendingUsername) {
+        loading.current = true;
+        createUserLocal(pendingUsername);
+      } else {
+        openModal('Username Entry');
+      }
     }
 
     return () => {
       loading.current = false;
       mounted = false;
     };
-  }, [dispatch, loaded, user.username]);
+  }, [dispatch, loaded, user.username, pendingUsername, openModal]);
+
+  const handleUsernameSubmit = (username) => {
+    setPendingUsername(username);
+  };
 
   if (!loaded) {
-    return null;
+    return <Home username={''} publicKey={''} userId={''} {...rest} openModal={openModal} onUsernameSubmit={handleUsernameSubmit} />;
   }
 
-  return <Home username={user.username} publicKey={user.publicKey} userId={user.id} {...rest} />;
+  return <Home username={user.username} publicKey={user.publicKey} userId={user.id} {...rest} openModal={openModal} onUsernameSubmit={handleUsernameSubmit} />;
 };
 
 WithUser.defaultProps = {
