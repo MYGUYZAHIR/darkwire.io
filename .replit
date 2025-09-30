@@ -52,4 +52,4 @@ externalPort = 3002
 [deployment]
 deploymentTarget = "vm"
 run = ["yarn", "start"]
-build = ["yarn", "build"]
+build = ["bash", "build.sh"]
