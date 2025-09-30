@@ -198,6 +198,10 @@ const Home = ({
   }, [toggleWindowFocus]);
 
   React.useEffect(() => {
+    if (!publicKey || !username) {
+      return;
+    }
+
     const socket = connectSocket(socketId);
 
     socket.on('disconnect', () => {
@@ -217,9 +221,6 @@ const Home = ({
         type: 'ADD_USER',
         payload: socketPayloadRef.current,
       });
-      if (payload.users.length === 1) {
-        openModal('Welcome');
-      }
     });
 
     socket.on('USER_EXIT', payload => {
@@ -256,12 +257,14 @@ const Home = ({
     sendEncryptedMessage,
     socketId,
     toggleSocketConnected,
+    publicKey,
+    username,
   ]);
 
   return (
     <div className={classNames(styles.styles, 'h-100')}>
       <div className="nav-container">
-        {!socketConnected && (
+        {!socketConnected && username && publicKey && (
           <div className="alert-banner">
             <span className="icon">
               <AlertCircle size="15" />
@@ -302,7 +305,7 @@ const Home = ({
   );
 };
 
-export const WithUser = ({ openModal, ...rest }) => {
+export const WithUser = ({ openModal, closeModal, ...rest }) => {
   const [loaded, setLoaded] = React.useState(false);
   const [pendingUsername, setPendingUsername] = React.useState(null);
   const loading = React.useRef(false);
@@ -334,6 +337,7 @@ export const WithUser = ({ openModal, ...rest }) => {
 
       loading.current = false;
       setLoaded(true);
+      closeModal();
     };
 
     if (!loaded && !loading.current) {
@@ -352,17 +356,17 @@ export const WithUser = ({ openModal, ...rest }) => {
       loading.current = false;
       mounted = false;
     };
-  }, [dispatch, loaded, user.username, pendingUsername, openModal]);
+  }, [dispatch, loaded, user.username, pendingUsername, openModal, closeModal]);
 
   const handleUsernameSubmit = (username) => {
     setPendingUsername(username);
   };
 
   if (!loaded) {
-    return <Home username={''} publicKey={''} userId={''} {...rest} openModal={openModal} onUsernameSubmit={handleUsernameSubmit} />;
+    return <Home username={''} publicKey={''} userId={''} {...rest} openModal={openModal} closeModal={closeModal} onUsernameSubmit={handleUsernameSubmit} />;
   }
 
-  return <Home username={user.username} publicKey={user.publicKey} userId={user.id} {...rest} openModal={openModal} onUsernameSubmit={handleUsernameSubmit} />;
+  return <Home username={user.username} publicKey={user.publicKey} userId={user.id} {...rest} openModal={openModal} closeModal={closeModal} onUsernameSubmit={handleUsernameSubmit} />;
 };
 
 WithUser.defaultProps = {
