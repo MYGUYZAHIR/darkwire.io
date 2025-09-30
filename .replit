@@ -41,6 +41,10 @@ externalPort = 80
 localPort = 34119
 externalPort = 3000
 
+[[ports]]
+localPort = 36245
+externalPort = 3002
+
 [deployment]
 deploymentTarget = "vm"
 run = ["yarn", "start"]
