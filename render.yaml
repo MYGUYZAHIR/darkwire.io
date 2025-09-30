@@ -1,0 +1,16 @@
+services:
+  - type: web
+    name: darkwire
+    runtime: node
+    env: node
+    buildCommand: bash build.sh
+    startCommand: yarn start
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: CLIENT_DIST_DIRECTORY
+        value: ../client/dist
+      - key: STORE_BACKEND
+        value: memory
+      - key: ROOM_HASH_SECRET
+        generateValue: true

@@ -11,6 +11,7 @@ Darkwire.io is an encrypted web chat application that uses end-to-end encryption
 - **Port Configuration**: Client on port 5000 (frontend), Server on port 3001 (backend)
 - **WebSocket Proxy**: Configured Vite proxy to forward socket.io connections to backend server at localhost:3001
 - **Deployment Config**: Set up VM deployment with `bash build.sh` as build command and `yarn start` as run command
+- **Render Deployment**: Created render.yaml configuration file for easy one-click deployment on Render
 - **Verified Working**: Both frontend and backend are running successfully with proper WebSocket connectivity
 
 ## Project Structure
@@ -37,6 +38,27 @@ This is a monorepo with two main parts:
 - Real-time messaging via WebSockets
 
 ## Deployment
+
+### Replit Deployment
 - Deployment type: VM (keeps both frontend and backend running)
 - Build command: `yarn build`
 - Start command: `yarn start`
+
+### Render Deployment
+The project includes a `render.yaml` configuration file for easy deployment on Render.
+
+**Quick Deploy:**
+1. Push your code to a Git repository (GitHub, GitLab, or Bitbucket)
+2. Create a new Web Service on Render and connect your repository
+3. Render will automatically detect the `render.yaml` file and configure the service
+4. The app will build and deploy automatically
+
+**Manual Configuration (if not using render.yaml):**
+- **Build Command**: `bash build.sh`
+- **Start Command**: `yarn start`
+- **Environment Variables** (optional):
+  - `NODE_ENV=production`
+  - `ROOM_HASH_SECRET` (auto-generated recommended)
+  - `STORE_BACKEND=memory`
+
+The server automatically uses Render's `PORT` environment variable, so no port configuration is needed.
