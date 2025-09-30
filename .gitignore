@@ -3,3 +3,7 @@ node_modules
 *.log
 *sublime*
 *.rdb
+.env
+dist
+build
+coverage
