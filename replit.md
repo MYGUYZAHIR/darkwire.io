@@ -4,13 +4,14 @@
 Darkwire.io is an encrypted web chat application that uses end-to-end encryption powered by the Web Cryptography API. This is a complete GitHub import configured to run on Replit.
 
 ## Recent Changes (Sept 30, 2025)
-- **GitHub Import Setup**: Configured the imported project to run in Replit environment
-- **Environment Configuration**: Created .env files for both client and server from templates
-- **Vite Configuration**: Added `allowedHosts: true` to support Replit's proxy setup
-- **PostCSS Fix**: Removed problematic PostCSS config that caused module errors
+- **GitHub Import Setup**: Successfully configured the imported project to run in Replit environment
+- **Dependencies Installation**: Installed all dependencies for root, client, and server
+- **Environment Configuration**: Created .env files for both client and server from .env.dist templates
+- **Vite Configuration**: Configured Vite dev server with host `0.0.0.0` and proper HMR settings for Replit
 - **Port Configuration**: Client on port 5000 (frontend), Server on port 3001 (backend)
-- **WebSocket Proxy Fix**: Added Vite proxy to forward socket.io connections to backend server
-- **Deployment Config**: Set up VM deployment with build and start scripts
+- **WebSocket Proxy**: Configured Vite proxy to forward socket.io connections to backend server at localhost:3001
+- **Deployment Config**: Set up VM deployment with `bash build.sh` as build command and `yarn start` as run command
+- **Verified Working**: Both frontend and backend are running successfully with proper WebSocket connectivity
 
 ## Project Structure
 This is a monorepo with two main parts:
