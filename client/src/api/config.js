@@ -15,7 +15,7 @@ switch (import.meta.env.MODE) {
     port = import.meta.env.VITE_API_PORT || 443;
     break;
   default:
-    host = import.meta.env.VITE_API_HOST || 'localhost';
+    host = import.meta.env.VITE_API_HOST ?? 'localhost';
     protocol = import.meta.env.VITE_API_PROTOCOL || 'http';
     port = import.meta.env.VITE_API_PORT || 3001;
 }

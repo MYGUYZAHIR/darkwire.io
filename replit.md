@@ -9,6 +9,7 @@ Darkwire.io is an encrypted web chat application that uses end-to-end encryption
 - **Vite Configuration**: Added `allowedHosts: true` to support Replit's proxy setup
 - **PostCSS Fix**: Removed problematic PostCSS config that caused module errors
 - **Port Configuration**: Client on port 5000 (frontend), Server on port 3001 (backend)
+- **WebSocket Proxy Fix**: Added Vite proxy to forward socket.io connections to backend server
 - **Deployment Config**: Set up VM deployment with build and start scripts
 
 ## Project Structure
