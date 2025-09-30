@@ -11,8 +11,7 @@ export default defineConfig({
     host: '0.0.0.0',
     port: 5000,
     hmr: {
-      clientPort: 443,
-      protocol: 'wss'
+      host: '0.0.0.0'
     },
     proxy: {
       '/socket.io': {
